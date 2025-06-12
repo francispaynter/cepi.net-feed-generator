@@ -1,3 +1,4 @@
+import { globalHealthFeed } from './algos/globalHealthFeed'
 import { AppContext } from '../config'
 import {
   QueryParams,
@@ -9,6 +10,7 @@ type AlgoHandler = (ctx: AppContext, params: QueryParams) => Promise<AlgoOutput>
 
 const algos: Record<string, AlgoHandler> = {
   [whatsAlf.shortname]: whatsAlf.handler,
+  [globalHealthFeed.shortname]: globalHealthFeed.handler,
 }
 
 export default algos

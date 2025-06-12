@@ -1,0 +1,38 @@
+import { FeedItem, FeedAlgorithm } from '../types'
+
+const KEYWORDS = [
+  "vaccine", "vaccine platform", "mRNA", "RNA vaccine", "DNA vaccine",
+  "self-amplifying RNA", "viral vector", "adjuvant", "thermostable vaccine",
+  "vaccine delivery", "clinical trial", "prototype pathogen", "pandemic vaccine", "pathogen x",
+  "Lassa", "Nipah", "MERS", "Marburg", "Rift Valley fever", "Chikungunya",
+  "Ebola", "Zika", "COVID-19", "SARS-CoV-2", "Disease X", "emerging pathogen",
+  "outbreak", "spillover", "zoonotic",
+  "CEPI", "globalhealth", "pandemicprep", "health security", "vaccine equity",
+  "#vaccineequity", "vaccine access", "equitable access", "low- and middle-income countries",
+  "LMICs", "COVAX", "ACT-A", "ACTAccelerator",
+  "100 Days Mission", "R&D Blueprint", "PPR", "pandemic accord",
+  "pandemic fund", "G7", "G20",
+  "Coalition for Epidemic Preparedness", "WHO", "Gavi", "Wellcome",
+  "PATH", "BARDA", "Sabin Vaccine Institute", "Oxford Vaccine Group", "WHO R&D"
+]
+
+const TRUSTED_HANDLES = [
+  "cepi", "who", "gavi", "wellcometrust", "path", "barda", "sabin", "oxfordvaccines"
+]
+
+export const globalHealthFeed: FeedAlgorithm = {
+  name: 'Global Health & Epidemic Preparedness',
+  description: 'Posts about CEPI, priority pathogens, vaccines, equity, and global outbreak readiness.',
+
+  async fetchFeed(ctx) {
+    const posts = await ctx.getPosts()
+    const filtered: FeedItem[] = posts.filter(post => {
+      const text = post.record?.text?.toLowerCase() ?? ''
+      const author = post.author.handle.toLowerCase()
+      const keywordMatch = KEYWORDS.some(kw => text.includes(kw.toLowerCase()))
+      const trustedAuthor = TRUSTED_HANDLES.includes(author)
+      return keywordMatch || trustedAuthor
+    })
+    return filtered
+  }
+}

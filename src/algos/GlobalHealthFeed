@@ -21,6 +21,7 @@ const TRUSTED_HANDLES = [
 ]
 
 export const globalHealthFeed: FeedAlgorithm = {
+  shortname: 'globalHealthFeed',  // unique ID for registration
   name: 'Global Health & Epidemic Preparedness',
   description: 'Posts about CEPI, priority pathogens, vaccines, equity, and global outbreak readiness.',
 
@@ -34,5 +35,14 @@ export const globalHealthFeed: FeedAlgorithm = {
       return keywordMatch || trustedAuthor
     })
     return filtered
+  },
+
+  // Required handler to return feed data in Bluesky expected format
+  handler: async (ctx, params) => {
+    const items = await globalHealthFeed.fetchFeed(ctx)
+    return {
+      cursor: null,  // pagination cursor if you add it later
+      feed: items,
+    }
   }
 }
